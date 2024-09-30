@@ -97,8 +97,10 @@
 		H.leader = TRUE
 		H.faction_perms = list(1,1,1,1)
 		map.custom_faction_nr += newname
-												//ind						mil					med			leader money	symbol	main color	backcolor, sales tax, business tax
-		var/newnamev = list("[newname]" = list(map.default_research,map.default_research,map.default_research,H,0,choosesymbol,choosecolor1,choosecolor2,10,10))
+
+		var/subfactions = list()
+												//ind						mil					med			leader money	symbol	main color	backcolor, sales tax, business tax, list at the end for storing subfactions
+		var/newnamev = list("[newname]" = list(map.default_research,map.default_research,map.default_research,H,0,choosesymbol,choosecolor1,choosecolor2,10,10,subfactions))
 		map.custom_civs += newnamev
 		to_chat(usr, "<big>You are now the leader of the <b>[newname]</b> faction.</big>")
 		return
@@ -360,13 +362,16 @@
 		if (U.civilization == "none")
 			to_chat(usr, SPAN_DANGER("You must be in a faction to create a subfaction."))
 			return
+		else if (U.subfaction != "none")
+			to_chat(usr, SPAN_DANGER("You are already in a subfaction."))
+			return
 		else
 			var/choosename = input(src, "Choose a name for the subfaction: ") as text|null
 			if (choosename != null && choosename != "")
 				create_subfaction_pr(choosename)
 			return
 	else
-		to_chat(usr, SPAN_DANGER("You cannot create a subfaction in this map."))
+		to_chat(usr, SPAN_DANGER("You cannot create a subfaction on this map."))
 		return
 
 /mob/living/human/proc/create_subfaction_pr(var/newname = "none")
@@ -374,10 +379,20 @@
 		return
 	var/mob/living/human/H = src
 
+	for(var/i = 1, i <= map.custom_civs[civilization][11].len, i++)
+		if (map.custom_civs[civilization][11][i] == newname)
+			to_chat(usr, SPAN_DANGER("That subfaction already exists. Choose another name."))
+			return
+
 	if (newname != null && newname != "none")
-		H.subcivilization = newname
-		var/newnamev = list("[newname]" = list(H))
-		map.custom_subfactions += newnamev
+		H.subfaction = newname
+		var/final_subfaction = list("[newname]" = list(H)) // only need to remember the owner of the faction
+
+		map.custom_civs[civilization][11] += final_subfaction // add new subfaction to a list under the faction, 11 => subfactions list
+
+
+		//var/newnamev = list("[newname]" = list(H))
+		//map.custom_subfactions += newnamev
 
 
 		to_chat(usr, "<big>You are now the leader of the <b>[newname]</b> subfaction.</big>")

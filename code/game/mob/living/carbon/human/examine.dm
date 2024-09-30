@@ -389,9 +389,21 @@
 
 			if (H.civilization == civilization && civilization != "none") // when you ghost, mind.assigned_job is set to null
 				msg += "<br><i>You recognize [T.him] as a member of your faction, <b>[civilization]</b>.</i>"
+				//msg += subfaction != "none" ? "<br><i>They're also " + map.custom_civs[civilization][11][subfaction][1].real_name == real_name ? "the leader" : "a member" + " of the subfaction <b>[subfaction]</b>.</i>" : "123"
+				if (subfaction != "none")
+					//flavor_text += "SUBFACTION LEADER: [map.custom_civs[civilization][11][subfaction][1].real_name] / EXAMINED MOB: [real_name]"
+					if (map.custom_civs[civilization][11][subfaction][1].real_name == real_name)
+						msg += "<br><i>They're also the leader of the subfaction <b>[subfaction]</b>.</i>"
+					else
+						msg += "<br><i>They're also a member of the subfaction <b>[subfaction]</b>.</i>"
+				
+
+
+				//msg += "<br><i>You recognize [T.him] as a member of your faction, <b>[civilization]</b>.</i>"
 				if (map.custom_civs[H.civilization][4] != null)
 					if (map.custom_civs[H.civilization][4].real_name == real_name)
 						msg += "<br><b>[T.He] is the leader of your faction.</b>"
+
 
 			else if (civilization == "none")
 				msg += "<br><i>[T.He] is a nomad. [T.He] has no faction</b>.</i>"
