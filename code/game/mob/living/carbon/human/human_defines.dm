@@ -175,6 +175,7 @@
 //	if you dont have that reagent in your blood.
 
 	var/civilization = "none" //what civilization this person belongs to
+	var/subcivilization = "none" // what subfaction of this civilization this person belongs to
 	var/leader = FALSE
 	//leadership (total control!), announcement, give titles, recruitment
 	var/list/faction_perms = list(0,0,0,0)

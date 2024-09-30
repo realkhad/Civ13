@@ -1,6 +1,7 @@
 /mob/living/human/proc/make_nomad()
 	if (map.nomads)
 		verbs += /mob/living/human/proc/create_faction
+		verbs += /mob/living/human/proc/create_subfaction
 		verbs += /mob/living/human/proc/abandon_faction
 		verbs += /mob/living/human/proc/transfer_faction
 		verbs += /mob/living/human/proc/become_leader
@@ -343,6 +344,45 @@
 	else
 		to_chat(usr, SPAN_DANGER("You cannot give titles in this map."))
 		return
+
+/////////////   SUB-FACTIONS   /////////////
+/mob/living/human/proc/create_subfaction()
+	set name = "Create Subfaction"
+	set category = "Faction"
+	var/mob/living/human/U
+
+	if (istype(src, /mob/living/human))
+		U = src
+	else
+		return
+
+	if (map.nomads == TRUE)
+		if (U.civilization == "none")
+			to_chat(usr, SPAN_DANGER("You must be in a faction to create a subfaction."))
+			return
+		else
+			var/choosename = input(src, "Choose a name for the subfaction: ") as text|null
+			if (choosename != null && choosename != "")
+				create_subfaction_pr(choosename)
+			return
+	else
+		to_chat(usr, SPAN_DANGER("You cannot create a subfaction in this map."))
+		return
+
+/mob/living/human/proc/create_subfaction_pr(var/newname = "none")
+	if (!ishuman(src))
+		return
+	var/mob/living/human/H = src
+
+	if (newname != null && newname != "none")
+		H.subcivilization = newname
+		var/newnamev = list("[newname]" = list(H))
+		map.custom_subfactions += newnamev
+
+
+		to_chat(usr, "<big>You are now the leader of the <b>[newname]</b> subfaction.</big>")
+		return
+
 
 ////////////////POSTERS, BANNERS, ETC//////////////////////////////
 

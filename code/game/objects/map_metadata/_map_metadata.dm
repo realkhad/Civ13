@@ -130,6 +130,7 @@ var/civmax_research = list(230,230,230)
 	var/has_hunger = FALSE
 	var/list/custom_faction_nr = list()
 	var/list/custom_civs = list()
+	var/list/custom_subfactions = list()
 	var/list/custom_religions = list()
 	var/list/custom_religion_nr = list()
 	var/list/custom_company = list() //name; percentage; realized (withdrawable) profits
